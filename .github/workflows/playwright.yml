@@ -1,0 +1,168 @@
+name: AgriQR UI and API Tests
+
+on:
+  push:
+    branches:
+      - main
+      - developer-1
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: agriqr_v2
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -----------------------------
+      # Python / Backend
+      # -----------------------------
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install backend dependencies
+        working-directory: ./Backend_auth-only/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run database migrations
+        working-directory: ./Backend_auth-only
+        env:
+          PGPASSWORD: postgres
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          psql -h localhost -U postgres -d agriqr_v2 -f backend/migrations/001_agriqr_v2_schema.sql
+          psql -h localhost -U postgres -d agriqr_v2 -f backend/migrations/002_onboarding_state_and_password.sql
+          psql -h localhost -U postgres -d agriqr_v2 -f backend/migrations/003_password_reset_tokens.sql
+
+      - name: Start backend
+        working-directory: ./Backend_auth-only/backend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/agriqr_v2
+          JWT_SECRET: test-secret-for-ci
+          CORS_ORIGINS: http://localhost:3000
+          FRONTEND_BASE_URL: http://localhost:3000
+          PUBLIC_API_BASE_URL: http://localhost:8000
+        run: |
+          nohup uvicorn app.main:app \
+            --host 0.0.0.0 \
+            --port 8000 \
+            > backend.log 2>&1 &
+
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if curl -fs http://localhost:8000/health; then
+              echo "Backend is ready"
+              exit 0
+            fi
+
+            echo "Waiting for backend..."
+            sleep 2
+          done
+
+          echo "Backend failed to start"
+          cat Backend_auth-only/backend/backend.log
+          exit 1
+
+      # -----------------------------
+      # Node / Frontend
+      # -----------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install frontend dependencies
+        working-directory: ./Frontend_auth-only/frontend
+        run: npm ci
+
+      - name: Start frontend
+        working-directory: ./Frontend_auth-only/frontend
+        env:
+          REACT_APP_API_URL: http://localhost:8000
+        run: |
+          nohup npm start > frontend.log 2>&1 &
+
+      - name: Wait for frontend
+        run: |
+          for i in {1..30}; do
+            if curl -fs http://localhost:3000 > /dev/null; then
+              echo "Frontend is ready"
+              exit 0
+            fi
+
+            echo "Waiting for frontend..."
+            sleep 2
+          done
+
+          echo "Frontend failed to start"
+          cat Frontend_auth-only/frontend/frontend.log
+          exit 1
+
+      # -----------------------------
+      # Playwright
+      # -----------------------------
+
+      - name: Install Playwright Chromium
+        run: |
+          npx playwright install chromium --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          npx playwright test
+
+      # -----------------------------
+      # Reports
+      # -----------------------------
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload application logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-logs
+          path: |
+            Backend_auth-only/backend/backend.log
+            Frontend_auth-only/frontend/frontend.log
+          retention-days: 7
