@@ -1,0 +1,16 @@
+{
+  "name": "frontend_auth-only",
+  "version": "1.0.0",
+  "description": "This is a trimmed copy of the full project containing **only** the files needed to run and test the four pages currently in scope:",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2",
+    "wait-on": "^9.1.0"
+  }
+}

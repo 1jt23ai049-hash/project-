@@ -1,0 +1,362 @@
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Box,
+  Typography,
+  Button,
+} from "@mui/material";
+import {
+  CheckCircle2,
+  Leaf,
+  Smartphone,
+  ScanLine,
+} from "lucide-react";
+
+import { BRAND } from "./theme/brand";
+import Logo from "./components/Logo";
+
+import CompanyRegister from "./pages/auth/CompanyRegister";
+import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: BRAND.primary,
+      dark: BRAND.primaryDark,
+      light: BRAND.primaryLight,
+    },
+    secondary: {
+      main: BRAND.accent,
+      dark: BRAND.accentDark,
+    },
+    background: {
+      default: BRAND.bg,
+      paper: "#ffffff",
+    },
+    text: {
+      primary: BRAND.ink,
+      secondary: BRAND.muted,
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontFamily: '"Sora", "Inter", sans-serif',
+    },
+    h2: {
+      fontFamily: '"Sora", "Inter", sans-serif',
+    },
+    h3: {
+      fontFamily: '"Sora", "Inter", sans-serif",
+    },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+});
+
+const FeatureItem = ({ children }: { children: React.ReactNode }) => (
+  <Box className="hero-feature">
+    <CheckCircle2 size={18} />
+    <Typography>{children}</Typography>
+  </Box>
+);
+
+const InfoSection = ({
+  id,
+  title,
+  description,
+}: {
+  id: string;
+  title: string;
+  description: string;
+}) => (
+  <Box id={id} className="home-info-section pq-section">
+    <Box className="section-inner">
+      <Box className="pq-divider-cool" />
+
+      <Typography variant="h2" className="section-title">
+        {title}
+      </Typography>
+
+      <Typography className="section-description">
+        {description}
+      </Typography>
+    </Box>
+  </Box>
+);
+
+const HomePage: React.FC = () => {
+  return (
+    <Box className="home-page">
+
+      {/* ================= NAVBAR ================= */}
+      <Box component="header" className="home-header">
+        <Box className="home-navbar">
+
+          <Link to="/" className="logo-link">
+            <Logo size={34} />
+          </Link>
+
+          <Box component="nav" className="desktop-nav">
+            <a href="#how-it-works">How it works</a>
+            <a href="#static-vs-dynamic">Static vs Dynamic</a>
+            <a href="#reach">Reach</a>
+            <a href="#plans">Plans</a>
+            <a href="#faq">FAQ</a>
+          </Box>
+
+          <Box className="nav-actions">
+            <Link to="/auth/login" className="login-link">
+              Log in
+            </Link>
+
+            <Button
+              component={Link}
+              to="/company/register"
+              variant="contained"
+              className="signup-button"
+            >
+              Sign Up
+            </Button>
+          </Box>
+
+        </Box>
+      </Box>
+
+      {/* ================= HERO ================= */}
+      <Box className="hero-section">
+
+        <Box className="hero-container">
+
+          {/* LEFT SIDE */}
+          <Box className="hero-content">
+
+            <Box className="hero-badge">
+              <Leaf size={15} />
+              <span>
+                For manufacturers under FCO & bio-stimulant QR rules
+              </span>
+            </Box>
+
+            <Typography variant="h1" className="hero-title">
+              What's really
+              <br />
+              <span>inside the bag?</span>
+            </Typography>
+
+            <Typography className="hero-description">
+              AgriQR turns a bag, drum, or carton into something a farmer
+              can question before they buy it. One scan surfaces the batch's
+              registration, composition, and dates — pulled straight from
+              what the manufacturer filed, not restated by a dealer.
+            </Typography>
+
+            <Box className="hero-features">
+
+              <FeatureItem>
+                Gazette & licence reference on every scan
+              </FeatureItem>
+
+              <FeatureItem>
+                Composition and dosage in the buyer's own language
+              </FeatureItem>
+
+              <FeatureItem>
+                Batch, manufacturing, and expiry — not a marketing page
+              </FeatureItem>
+
+            </Box>
+
+            <Box className="hero-buttons">
+
+              <Button
+                component={Link}
+                to="/company/register"
+                variant="contained"
+                className="trial-button"
+              >
+                Start Your Trial
+              </Button>
+
+              <Button
+                href="#how-it-works"
+                variant="outlined"
+                className="how-button"
+              >
+                How It Works
+              </Button>
+
+            </Box>
+
+          </Box>
+
+          {/* RIGHT SIDE */}
+          <Box className="hero-visual">
+
+            <Box className="product-card">
+
+              <Box className="product-header">
+                <Box className="product-header-icon">
+                  <Leaf size={18} />
+                </Box>
+
+                <Box>
+                  <Typography className="product-brand">
+                    AgriQR Verified
+                  </Typography>
+
+                  <Typography className="product-subtitle">
+                    Scan result · Genuine agri-input
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box className="qr-area">
+                <Box className="qr-box">
+                  <Box className="fake-qr">
+                    <span>▦</span>
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box className="product-details">
+
+                <Box>
+                  <span>Product</span>
+                  <strong>NPK 19:19:19 — 50kg</strong>
+                </Box>
+
+                <Box>
+                  <span>Batch No.</span>
+                  <strong>FT-2026-0842</strong>
+                </Box>
+
+                <Box>
+                  <span>Mfg / Exp</span>
+                  <strong>Mar 2026 / Mar 2028</strong>
+                </Box>
+
+              </Box>
+
+            </Box>
+
+            {/* 100% Genuine */}
+            <Box className="floating-card genuine-card">
+              <Box className="floating-icon">
+                <Leaf size={16} />
+              </Box>
+
+              <Box>
+                <strong>100% Genuine</strong>
+                <span>Verified agri-input</span>
+              </Box>
+            </Box>
+
+            {/* No App Needed */}
+            <Box className="floating-card app-card">
+              <Box className="floating-icon">
+                <Smartphone size={16} />
+              </Box>
+
+              <Box>
+                <strong>No App Needed</strong>
+                <span>Works on any phone</span>
+              </Box>
+            </Box>
+
+            {/* Scan */}
+            <Box className="floating-card scan-card">
+              <Box className="floating-icon">
+                <ScanLine size={16} />
+              </Box>
+
+              <Box>
+                <strong>Scan · Instant Result</strong>
+                <span>Under 2 seconds</span>
+              </Box>
+            </Box>
+
+          </Box>
+
+        </Box>
+      </Box>
+
+      {/* ================= OTHER SECTIONS ================= */}
+
+      <InfoSection
+        id="how-it-works"
+        title="How It Works"
+        description="Learn how AgriQR works from registration to QR verification."
+      />
+
+      <InfoSection
+        id="static-vs-dynamic"
+        title="Static vs Dynamic"
+        description="Compare static and dynamic QR codes."
+      />
+
+      <InfoSection
+        id="reach"
+        title="Reach"
+        description="Reach customers and improve product traceability."
+      />
+
+      <InfoSection
+        id="plans"
+        title="Plans"
+        description="Choose the AgriQR plan that fits your business."
+      />
+
+      <InfoSection
+        id="faq"
+        title="FAQ"
+        description="Frequently asked questions about AgriQR."
+      />
+
+    </Box>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+
+      <BrowserRouter>
+        <Routes>
+
+          <Route path="/" element={<HomePage />} />
+
+          <Route
+            path="/company/register"
+            element={<CompanyRegister />}
+          />
+
+          <Route
+            path="/auth/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/auth/forgot-password"
+            element={<ForgotPassword />}
+          />
+
+          <Route
+            path="/auth/reset-password"
+            element={<ResetPassword />}
+          />
+
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+}
+
+export default App;

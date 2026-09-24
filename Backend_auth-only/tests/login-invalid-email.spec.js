@@ -1,0 +1,49 @@
+const { test, expect } = require('@playwright/test');
+
+const BASE_URL = 'http://localhost:8000';
+
+test('TEST 11 - Login with invalid email format', async ({ request }) => {
+
+  console.log('========================================');
+  console.log('TEST 11 - INVALID EMAIL FORMAT');
+  console.log('========================================');
+
+  const response = await request.post(
+    `${BASE_URL}/auth/login`,
+    {
+      data: {
+        email: 'not-an-email',
+        password: 'Test@12345'
+      }
+    }
+  );
+
+  console.log('Status:', response.status());
+
+  const responseText = await response.text();
+
+  console.log('Response:', responseText);
+
+  // ============================================
+  // VERIFY VALIDATION ERROR
+  // ============================================
+
+  expect(response.status()).toBe(422);
+
+  const data = JSON.parse(responseText);
+
+  expect(data).toHaveProperty('detail');
+
+  expect(Array.isArray(data.detail)).toBe(true);
+
+  console.log(
+    'Validation details:',
+    JSON.stringify(data.detail, null, 2)
+  );
+
+  console.log('========================================');
+  console.log('TEST 11 PASSED');
+  console.log('Invalid email format correctly rejected');
+  console.log('========================================');
+});
+

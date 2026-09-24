@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules/
+
+# Python virtual environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+.env.*
+
+# Playwright reports
+playwright-report/
+test-results/
+
+# Build files
+build/
+dist/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store

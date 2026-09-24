@@ -1,0 +1,28 @@
+const { test, expect } = require('@playwright/test');
+
+const BASE_URL = 'http://localhost:3000';
+
+test('Start Your Trial button is visible and clickable', async ({ page }) => {
+
+  // Open home page
+  await page.goto(BASE_URL);
+  await page.waitForLoadState('networkidle');
+
+  // Find Start Your Trial
+  const startTrial = page
+    .locator('a, button, [role="button"]')
+    .filter({ hasText: /Start Your Trial/i })
+    .first();
+
+  // Check it is visible
+  await expect(startTrial).toBeVisible();
+
+  // Check it is enabled
+  await expect(startTrial).toBeEnabled();
+
+  // Click it
+  await startTrial.click();
+
+  console.log('Start Your Trial button clicked successfully');
+  console.log('Current URL:', page.url());
+});

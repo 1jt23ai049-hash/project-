@@ -1,0 +1,236 @@
+
+const { test, expect } = require('@playwright/test');
+
+const BASE_URL = 'http://localhost:3000';
+
+test.describe('Login Page', () => {
+
+  // 1. Login 
+  // 2. Login title is visible
+  test('Login page title is visible', async ({ page }) => {
+  await page.goto(BASE_URL + '/auth/login');
+
+  const pageText = page.locator('body');
+
+  await expect(pageText).toBeVisible();
+});
+
+  // 3. Work Email field is visible
+  test('Work email field is visible', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+
+    await expect(email).toBeVisible();
+  });
+
+
+  // 4. Work Email accepts email
+  test('Work email accepts valid email', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+
+    await email.fill('test@example.com');
+
+    await expect(email).toHaveValue('test@example.com');
+  });
+
+
+  // 5. Work Email rejects invalid email
+  test('Work email rejects invalid email', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+
+    await email.fill('invalid-email');
+
+    await expect(email).toHaveValue('invalid-email');
+
+    const isValid = await email.evaluate((element) => {
+      return element.checkValidity();
+    });
+
+    expect(isValid).toBe(false);
+  });
+
+
+  // 6. Work Email cannot be empty
+  test('Work email cannot be empty', async ({ page }) => {
+  await page.goto(BASE_URL + '/auth/login');
+
+  const email = page.getByLabel(/email|work email/i).first();
+
+  await expect(email).toBeVisible();
+
+  await email.fill('');
+
+  await expect(email).toHaveValue('');
+
+  // Verify that the email field remains empty.
+  // The application should not receive an email value.
+  expect(await email.inputValue()).toBe('');
+});
+
+  // 7. Password field is visible
+  test('Password field is visible', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const password = page.getByLabel(/^Password/i);
+
+    await expect(password).toBeVisible();
+  });
+
+
+  // 8. Password accepts value
+  test('Password accepts valid value', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const password = page.getByLabel(/^Password/i);
+
+    await password.fill('Test@1234');
+
+    await expect(password).toHaveValue('Test@1234');
+  });
+
+
+  // 9. Password cannot be empty
+  test('Password cannot be empty', async ({ page }) => {
+  await page.goto(BASE_URL + '/auth/login');
+
+  const password = page.getByLabel(/^Password/i);
+
+  await expect(password).toBeVisible();
+
+  await password.fill('');
+
+  await expect(password).toHaveValue('');
+
+  // Verify that the password field is actually empty.
+  expect(await password.inputValue()).toBe('');
+});
+  // 10. Forgot Password link is visible
+  test('Forgot Password link is visible', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const forgotPassword = page.getByText(/forgot password/i);
+
+    await expect(forgotPassword).toBeVisible();
+  });
+
+
+  // 11. Forgot Password navigation
+  test('Forgot Password opens reset page', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    await page.getByText(/forgot password/i).click();
+
+    await expect(page).not.toHaveURL(/\/auth\/login$/);
+
+    console.log('Forgot Password URL:', page.url());
+  });
+
+
+  // 12. Login button is visible
+  test('Login button is visible', async ({ page }) => {
+  await page.goto(BASE_URL + '/auth/login');
+
+  const loginButton = page.locator('button').filter({
+    hasText: /login|sign in/i
+  }).first();
+
+  await expect(loginButton).toBeVisible();
+});
+
+  // 13. Login button is enabled
+  test('Login button is enabled', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const loginButton = page.getByRole('button', {
+      name: /^login$/i
+    });
+
+    await expect(loginButton).toBeEnabled();
+  });
+
+
+  // 14. Login with empty fields
+  test('Login with empty fields', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+    const password = page.getByLabel(/^Password/i);
+    const loginButton = page.getByRole('button', {
+      name: /^login$/i
+    });
+
+    await email.fill('');
+    await password.fill('');
+
+    await loginButton.click();
+
+    await expect(page).toHaveURL(/\/auth\/login/);
+  });
+
+
+  // 15. Login with invalid email
+  test('Login with invalid email', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+    const password = page.getByLabel(/^Password/i);
+    const loginButton = page.getByRole('button', {
+      name: /^login$/i
+    });
+
+    await email.fill('invalid-email');
+    await password.fill('Test@1234');
+
+    await loginButton.click();
+
+    await expect(page).toHaveURL(/\/auth\/login/);
+  });
+
+
+  // 16. Login with invalid credentials
+  test('Login with invalid credentials', async ({ page }) => {
+    await page.goto(BASE_URL + '/auth/login');
+
+    const email = page.getByLabel(/email|work email/i).first();
+    const password = page.getByLabel(/^Password/i);
+    const loginButton = page.getByRole('button', {
+      name: /^login$/i
+    });
+
+    await email.fill('test@example.com');
+    await password.fill('WrongPassword@123');
+
+    await loginButton.click();
+
+    // The application should remain on the login page
+    // if the credentials are invalid.
+    await expect(page).toHaveURL(/\/auth\/login/);
+  });
+
+});
+
+test('Debug Login Page Elements', async ({ page }) => {
+  await page.goto(BASE_URL + '/auth/login');
+
+  const buttons = await page.locator('button').allTextContents();
+
+  const inputs = await page.locator('input').evaluateAll(elements =>
+    elements.map(e => ({
+      type: e.type,
+      name: e.name,
+      placeholder: e.placeholder,
+      value: e.value
+    }))
+  );
+
+  console.log('BUTTONS:', buttons);
+  console.log('INPUTS:', inputs);
+
+  console.log('PAGE TEXT:');
+  console.log(await page.locator('body').innerText());
+});

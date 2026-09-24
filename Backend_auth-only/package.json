@@ -1,0 +1,18 @@
+{
+  "name": "backend_auth-only",
+  "version": "1.0.0",
+  "description": "This is a trimmed copy of the full project containing **only** the files needed to run and test the four pages currently in scope:",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
