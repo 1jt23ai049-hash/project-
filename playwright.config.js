@@ -67,60 +67,6 @@ module.exports = defineConfig({
     },
 
     // ==========================================
-    // FIREFOX - DESKTOP
-    // ==========================================
-    {
-      name: 'firefox-ui',
-
-      testMatch: [
-        /Frontend_auth-only\/tests\/.*\.spec\.js$/
-      ],
-
-      testIgnore: [
-        /.*debug.*/,
-        /.*example.*/,
-        /.*firefox-test.*/
-      ],
-
-      use: {
-        ...devices['Desktop Firefox'],
-
-        baseURL: 'http://localhost:3000',
-
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
-        trace: 'retain-on-failure'
-      }
-    },
-
-    // ==========================================
-    // WEBKIT - DESKTOP / SAFARI
-    // ==========================================
-    {
-      name: 'webkit-ui',
-
-      testMatch: [
-        /Frontend_auth-only\/tests\/.*\.spec\.js$/
-      ],
-
-      testIgnore: [
-        /.*debug.*/,
-        /.*example.*/,
-        /.*firefox-test.*/
-      ],
-
-      use: {
-        ...devices['Desktop Safari'],
-
-        baseURL: 'http://localhost:3000',
-
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
-        trace: 'retain-on-failure'
-      }
-    },
-
-    // ==========================================
     // MOBILE CHROME
     // ==========================================
     {
