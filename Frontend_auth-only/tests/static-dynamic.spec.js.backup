@@ -10,7 +10,10 @@ test('Static vs Dynamic navigation works correctly', async ({ page }) => {
 
   // Find Static vs Dynamic
   const staticDynamic = page
-    .locator('#static-vs-dynamic');
+    .locator('a, button, [role="button"]')
+    .filter({ hasText: /Static\s+vs\s+Dynamic/i })
+    .first();
+
   // Check it is visible
   await expect(staticDynamic).toBeVisible();
 

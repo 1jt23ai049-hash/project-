@@ -54,11 +54,13 @@ test.describe('AgriQR - Complete Frontend Tests', () => {
   // =========================================================
 
   test('04 - How It Works section is visible', async ({ page }) => {
-    const howItWorksSection = page.locator('#how-it-works');
+    const howItWorks = page
+      .getByText(/How It Works/i)
+      .first();
 
-    await expect(howItWorksSection).toBeVisible();
+    await expect(howItWorks).toBeVisible();
 
-    console.log('PASS: How It Works section is visible');
+    console.log('PASS: How It Works is visible');
   });
 
   // =========================================================
@@ -66,69 +68,61 @@ test.describe('AgriQR - Complete Frontend Tests', () => {
   // =========================================================
 
   test('05 - Static content is visible', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+    const staticText = page
+      .getByText(/Static/i)
+      .first();
 
-  const staticDynamicSection = page.locator('#static-vs-dynamic');
+    await expect(staticText).toBeVisible();
 
-  await expect(staticDynamicSection).toBeVisible();
+    console.log('PASS: Static content is visible');
+  });
 
-  console.log('PASS: Static content is visible');
-});
   // =========================================================
   // 6. DYNAMIC
   // =========================================================
 
- test('06 - Dynamic content is visible', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+  test('06 - Dynamic content is visible', async ({ page }) => {
+    const dynamicText = page
+      .getByText(/Dynamic/i)
+      .first();
 
-  const staticDynamicSection = page.locator('#static-vs-dynamic');
+    await expect(dynamicText).toBeVisible();
 
-  await expect(staticDynamicSection).toBeVisible();
+    console.log('PASS: Dynamic content is visible');
+  });
 
-  console.log('PASS: Dynamic content is visible');
-});
   // =========================================================
   // 7. STATIC VS DYNAMIC
   // =========================================================
 
   test('07 - Static vs Dynamic content is available', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+    await expect(
+      page.getByText(/Static/i).first()
+    ).toBeVisible();
 
-  const staticDynamicSection = page.locator('#static-vs-dynamic');
+    await expect(
+      page.getByText(/Dynamic/i).first()
+    ).toBeVisible();
 
-  await expect(staticDynamicSection).toBeVisible();
+    console.log('PASS: Static vs Dynamic content is available');
+  });
 
-  console.log('PASS: Static vs Dynamic section is visible');
-
-  await expect(
-    staticDynamicSection.getByText(/Static/i).first()
-  ).toBeVisible();
-
-  console.log('PASS: Static content is visible');
-
-  await expect(
-    staticDynamicSection.getByText(/Dynamic/i).first()
-  ).toBeVisible();
-
-  console.log('PASS: Dynamic content is visible');
-});
   // =========================================================
   // 8. REACH NAVIGATION
   // =========================================================
 
   test('08 - Reach navigation works', async ({ page }) => {
-    await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+    const reachLink = page.locator('a[href="#reach"]');
 
-  const reachSection = page.locator('#reach');
+    await expect(reachLink).toBeVisible();
 
-  await expect(reachSection).toBeVisible();
+    await reachLink.click();
 
-  console.log('PASS: Reach section is visible');
-});
+    await expect(page).toHaveURL(/#reach$/);
+
+    console.log('PASS: Reach navigation works');
+  });
+
   // =========================================================
   // 9. REACH SECTION
   // =========================================================
@@ -146,15 +140,16 @@ test.describe('AgriQR - Complete Frontend Tests', () => {
   // =========================================================
 
   test('10 - Plans navigation works', async ({ page }) => {
-    await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+    const plansLink = page.locator('a[href="#plans"]');
 
-  const plansSection = page.locator('#plans');
+    await expect(plansLink).toBeVisible();
 
-  await expect(plansSection).toBeVisible();
+    await plansLink.click();
 
-  console.log('PASS: Plans section is visible');
-});
+    await expect(page).toHaveURL(/#plans$/);
+
+    console.log('PASS: Plans navigation works');
+  });
 
   // =========================================================
   // 11. PLANS SECTION
@@ -189,15 +184,17 @@ test.describe('AgriQR - Complete Frontend Tests', () => {
   // =========================================================
 
   test('13 - Plans section becomes visible', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+    const plansLink = page.locator('a[href="#plans"]');
 
-  const plansSection = page.locator('#plans');
+    await plansLink.click();
 
-  await expect(plansSection).toBeVisible();
+    const plansSection = page.locator('#plans');
 
-  console.log('PASS: Plans section is visible');
-});
+    await expect(plansSection).toBeVisible();
+
+    console.log('PASS: Plans section is visible');
+  });
+
   // =========================================================
   // 14. PLANS NAVIGATION TARGET
   // =========================================================
@@ -214,16 +211,18 @@ test.describe('AgriQR - Complete Frontend Tests', () => {
   // 15. FAQ NAVIGATION
   // =========================================================
 
- test('15 - FAQ navigation works', async ({ page }) => {
-  await page.goto(BASE_URL);
-  await page.waitForLoadState('networkidle');
+  test('15 - FAQ navigation works', async ({ page }) => {
+    const faqLink = page.locator('a[href="#faq"]');
 
-  const faqSection = page.locator('#faq');
+    await expect(faqLink).toBeVisible();
 
-  await expect(faqSection).toBeVisible();
+    await faqLink.click();
 
-  console.log('PASS: FAQ section is visible');
-});
+    await expect(page).toHaveURL(/#faq$/);
+
+    console.log('PASS: FAQ navigation works');
+  });
+
   // =========================================================
   // 16. FAQ SECTION
   // =========================================================

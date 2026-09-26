@@ -23,6 +23,7 @@ module.exports = defineConfig({
   ],
 
   projects: [
+
     // ==========================================
     // BACKEND API TESTS
     // ==========================================
@@ -39,7 +40,7 @@ module.exports = defineConfig({
     },
 
     // ==========================================
-    // FRONTEND UI TESTS
+    // CHROMIUM - DESKTOP
     // ==========================================
     {
       name: 'chromium-ui',
@@ -57,9 +58,120 @@ module.exports = defineConfig({
       use: {
         ...devices['Desktop Chrome'],
 
-        baseURL: 'http://localhost:3000'
+        baseURL: 'http://localhost:3000',
+
+        screenshot: 'only-on-failure',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure'
+      }
+    },
+
+    // ==========================================
+    // FIREFOX - DESKTOP
+    // ==========================================
+    {
+      name: 'firefox-ui',
+
+      testMatch: [
+        /Frontend_auth-only\/tests\/.*\.spec\.js$/
+      ],
+
+      testIgnore: [
+        /.*debug.*/,
+        /.*example.*/,
+        /.*firefox-test.*/
+      ],
+
+      use: {
+        ...devices['Desktop Firefox'],
+
+        baseURL: 'http://localhost:3000',
+
+        screenshot: 'only-on-failure',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure'
+      }
+    },
+
+    // ==========================================
+    // WEBKIT - DESKTOP / SAFARI
+    // ==========================================
+    {
+      name: 'webkit-ui',
+
+      testMatch: [
+        /Frontend_auth-only\/tests\/.*\.spec\.js$/
+      ],
+
+      testIgnore: [
+        /.*debug.*/,
+        /.*example.*/,
+        /.*firefox-test.*/
+      ],
+
+      use: {
+        ...devices['Desktop Safari'],
+
+        baseURL: 'http://localhost:3000',
+
+        screenshot: 'only-on-failure',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure'
+      }
+    },
+
+    // ==========================================
+    // MOBILE CHROME
+    // ==========================================
+    {
+      name: 'mobile-chrome',
+
+      testMatch: [
+        /Frontend_auth-only\/tests\/.*\.spec\.js$/
+      ],
+
+      testIgnore: [
+        /.*debug.*/,
+        /.*example.*/,
+        /.*firefox-test.*/
+      ],
+
+      use: {
+        ...devices['Pixel 5'],
+
+        baseURL: 'http://localhost:3000',
+
+        screenshot: 'only-on-failure',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure'
+      }
+    },
+
+    // ==========================================
+    // MOBILE SAFARI
+    // ==========================================
+    {
+      name: 'mobile-safari',
+
+      testMatch: [
+        /Frontend_auth-only\/tests\/.*\.spec\.js$/
+      ],
+
+      testIgnore: [
+        /.*debug.*/,
+        /.*example.*/,
+        /.*firefox-test.*/
+      ],
+
+      use: {
+        ...devices['iPhone 13'],
+
+        baseURL: 'http://localhost:3000',
+
+        screenshot: 'only-on-failure',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure'
       }
     }
   ]
 });
-
